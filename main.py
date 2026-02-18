@@ -6,6 +6,12 @@ def main():
     screen_width = 1200
     screen_height = 700
     screen = pygame.display.set_mode([screen_width, screen_height])
+    surf = pygame.Surface((50, 50))
+    surf.fill((0, 0, 0))
+    surf_center = (
+        (screen_width-surf.get_width())/2, 
+        (screen_height-surf.get_height())/2
+        )
 
     running = True
     while running:
@@ -13,8 +19,8 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
         
-        screen.fill((255, 255, 255))
-        pygame.draw.circle(screen, (0, 0, 255), (screen_width/2, screen_height/2), 75)
+        screen.fill((25, 255, 255))
+        screen.blit(surf, surf_center)
         pygame.display.flip()
 
 if __name__ == "__main__":
