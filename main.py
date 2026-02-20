@@ -55,7 +55,7 @@ class Enemy(pygame.sprite.Sprite):
                 random.randint(0, screen_height)
             )
         )
-        self.speed = random.randint(5, 20)
+        self.speed = random.randint(5, 15)
 
     def update(self):
         self.move()
@@ -72,8 +72,14 @@ def main():
 
     # --- Object Initialisation ---
     screen = pygame.display.set_mode([screen_width, screen_height])
+
+    add_enemy = pygame.USEREVENT + 1
+    pygame.time.set_timer(add_enemy, 250)
     player = Player()
-    enemy = Enemy()
+
+    enemies = pygame.sprite.Group()
+    all_sprites = pygame.sprite.Group()
+    all_sprites.add(player)
     
     # --- Main Game Loop ---
     running = True
@@ -81,14 +87,23 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+            elif event.type == add_enemy:
+                new_enemy = Enemy()
+                enemies.add(new_enemy)
+                all_sprites.add(new_enemy)
+
+        if pygame.sprite.spritecollideany(player, enemies):
+            player.kill()
+            running = False
         
         pressed_keys = pygame.key.get_pressed()
         player.update(pressed_keys)
-        enemy.update()
+        enemies.update()
 
         screen.fill((25, 255, 255))
-        screen.blit(player.surf, player.rect)
-        screen.blit(enemy.surf, enemy.rect)
+        for entity in all_sprites:
+            screen.blit(entity.surf, entity.rect)
         pygame.display.flip()
 
 # --- Call For Main ---
